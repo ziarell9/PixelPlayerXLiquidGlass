@@ -2,17 +2,18 @@ package com.theveloper.pixelplay.presentation.components.player
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.Player
+import com.kyant.backdrop.components.Tab
+import com.kyant.backdrop.components.Tabs
 import com.theveloper.pixelplay.R
-import com.theveloper.pixelplay.presentation.components.LocalMaterialTheme
-import com.theveloper.pixelplay.presentation.components.ToggleSegmentButton
 import racra.compose.smooth_corner_rect_library.AbsoluteSmoothCornerShape
 
 @Composable
@@ -36,103 +37,37 @@ fun BottomToggleRow(
 ) {
     val isFavorite = isFavoriteProvider()
     val rowCorners = 60.dp
+    // Track the visual droplet position
+    var selectedTabIndex by remember { mutableIntStateOf(1) }
 
     Box(
         modifier = modifier.background(
             color = containerColor,
             shape = AbsoluteSmoothCornerShape(
-                cornerRadiusBL = rowCorners,
-                smoothnessAsPercentTR = 60,
-                cornerRadiusBR = rowCorners,
-                smoothnessAsPercentBL = 60,
-                cornerRadiusTL = rowCorners,
-                smoothnessAsPercentBR = 60,
-                cornerRadiusTR = rowCorners,
-                smoothnessAsPercentTL = 60
+                cornerRadiusBL = rowCorners, smoothnessAsPercentTR = 60,
+                cornerRadiusBR = rowCorners, smoothnessAsPercentBL = 60,
+                cornerRadiusTL = rowCorners, smoothnessAsPercentBR = 60,
+                cornerRadiusTR = rowCorners, smoothnessAsPercentTL = 60
             )
         )
     ) {
-                    // TAB 1: REPEAT
-            val repeatActive = repeatMode != Player.REPEAT_MODE_OFF
-            Tab(
-                selected = selectedTabIndex == 1,
-                onClick = {
-                    selectedTabIndex = 1
-                    onRepeatToggle()
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(
-                    painter = painterResource(when (repeatMode) {
-                        Player.REPEAT_MODE_ONE -> R.drawable.rounded_repeat_one_24
-                        else -> R.drawable.rounded_repeat_24
-                    }),
-                    contentDescription = "Repeat",
-                    tint = if (repeatActive) activeColorSecondary else inactiveContentColor
-                )
+        Tabs(
+            selectedTabIndex = selectedTabIndex,
+            modifier = Modifier.fillMaxWidth().height(66.dp)
+        ) {
+            // TAB 0: SHUFFLE
+            Tab(selected = selectedTabIndex == 0, onClick = { selectedTabIndex = 0; onShuffleToggle() }, modifier = Modifier.weight(1f)) {
+                Icon(painter = painterResource(R.drawable.rounded_shuffle_24), contentDescription = "Shuffle", tint = if (isShuffleEnabled) activeColorMain else inactiveContentColor)
             }
-
+            // TAB 1: REPEAT
+            Tab(selected = selectedTabIndex == 1, onClick = { selectedTabIndex = 1; onRepeatToggle() }, modifier = Modifier.weight(1f)) {
+                val repeatActive = repeatMode != Player.REPEAT_MODE_OFF
+                Icon(painter = painterResource(if (repeatMode == Player.REPEAT_MODE_ONE) R.drawable.rounded_repeat_one_24 else R.drawable.rounded_repeat_24), contentDescription = "Repeat", tint = if (repeatActive) activeColorSecondary else inactiveContentColor)
+            }
             // TAB 2: FAVORITE
-            val isFavorite = isFavoriteProvider()
-            Tab(
-                selected = selectedTabIndex == 2,
-                onClick = {
-                    selectedTabIndex = 2
-                    onFavoriteToggle()
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(
-                    painter = painterResource(if (isFavorite) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24),
-                    contentDescription = "Favorite",
-                    tint = if (isFavorite) activeColorTertiary else inactiveContentColor
-                )
+            Tab(selected = selectedTabIndex == 2, onClick = { selectedTabIndex = 2; onFavoriteToggle() }, modifier = Modifier.weight(1f)) {
+                Icon(painter = painterResource(if (isFavorite) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24), contentDescription = "Favorite", tint = if (isFavorite) activeColorTertiary else inactiveContentColor)
             }
-
-            val commonModifier = Modifier.weight(1f)
-
-            ToggleSegmentButton(
-                modifier = commonModifier,
-                active = isShuffleEnabled,
-                activeColor = activeColorMain,
-                activeCornerRadius = rowCorners,
-                activeContentColor = onActiveColorMain,
-                inactiveColor = inactiveColor,
-                inactiveContentColor = inactiveContentColor,
-                onClick = onShuffleToggle,
-                iconId = R.drawable.rounded_shuffle_24,
-                contentDesc = "Shuffle"
-            )
-            val repeatActive = repeatMode != Player.REPEAT_MODE_OFF
-            val repeatIcon = when (repeatMode) {
-                Player.REPEAT_MODE_ONE -> R.drawable.rounded_repeat_one_24
-                Player.REPEAT_MODE_ALL -> R.drawable.rounded_repeat_24
-                else -> R.drawable.rounded_repeat_24
-            }
-            ToggleSegmentButton(
-                modifier = commonModifier,
-                active = repeatActive,
-                activeColor = activeColorSecondary,
-                activeCornerRadius = rowCorners,
-                activeContentColor = onActiveColorSecondary,
-                inactiveColor = inactiveColor,
-                inactiveContentColor = inactiveContentColor,
-                onClick = onRepeatToggle,
-                iconId = repeatIcon,
-                contentDesc = "Repeat"
-            )
-            ToggleSegmentButton(
-                modifier = commonModifier,
-                active = isFavorite,
-                activeColor = activeColorTertiary,
-                activeCornerRadius = rowCorners,
-                activeContentColor = onActiveColorTertiary,
-                inactiveColor = inactiveColor,
-                inactiveContentColor = inactiveContentColor,
-                onClick = onFavoriteToggle,
-                iconId = if (isFavorite) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24,
-                contentDesc = "Favorite"
-            )
         }
     }
 }
