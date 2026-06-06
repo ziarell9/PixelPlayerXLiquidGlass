@@ -52,26 +52,43 @@ fun BottomToggleRow(
             )
         )
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .clip(
-                    AbsoluteSmoothCornerShape(
-                        cornerRadiusBL = rowCorners,
-                        smoothnessAsPercentTR = 60,
-                        cornerRadiusBR = rowCorners,
-                        smoothnessAsPercentBL = 60,
-                        cornerRadiusTL = rowCorners,
-                        smoothnessAsPercentBR = 60,
-                        cornerRadiusTR = rowCorners,
-                        smoothnessAsPercentTL = 60
-                    )
+                    // TAB 1: REPEAT
+            val repeatActive = repeatMode != Player.REPEAT_MODE_OFF
+            Tab(
+                selected = selectedTabIndex == 1,
+                onClick = {
+                    selectedTabIndex = 1
+                    onRepeatToggle()
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(
+                    painter = painterResource(when (repeatMode) {
+                        Player.REPEAT_MODE_ONE -> R.drawable.rounded_repeat_one_24
+                        else -> R.drawable.rounded_repeat_24
+                    }),
+                    contentDescription = "Repeat",
+                    tint = if (repeatActive) activeColorSecondary else inactiveContentColor
                 )
-                .background(Color.Transparent),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+            }
+
+            // TAB 2: FAVORITE
+            val isFavorite = isFavoriteProvider()
+            Tab(
+                selected = selectedTabIndex == 2,
+                onClick = {
+                    selectedTabIndex = 2
+                    onFavoriteToggle()
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(
+                    painter = painterResource(if (isFavorite) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24),
+                    contentDescription = "Favorite",
+                    tint = if (isFavorite) activeColorTertiary else inactiveContentColor
+                )
+            }
+
             val commonModifier = Modifier.weight(1f)
 
             ToggleSegmentButton(
