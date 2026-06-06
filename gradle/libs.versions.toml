@@ -71,6 +71,7 @@ commons-lang3 = "3.20.0"
 jdom2 = "2.0.6.1"
 jose4j = "0.9.6"
 httpclient = "4.5.14"
+liquidGlass = "2.0.0"
 
 # DI
 dagger = "2.59.2"
@@ -270,6 +271,8 @@ jdom2 = { module = "org.jdom:jdom2", version.ref = "jdom2" }
 jose4j = { module = "org.bitbucket.b_c:jose4j", version.ref = "jose4j" }
 apache-httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "httpclient" }
 
+#Liquid Glass
+liquid-glass = { module = "io.github.kyant0:backdrop", version.ref = "liquidGlass" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
