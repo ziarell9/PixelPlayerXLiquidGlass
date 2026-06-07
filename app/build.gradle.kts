@@ -199,6 +199,9 @@ dependencies {
     implementation(libs.androidx.profileinstaller)
     "baselineProfile"(project(":baselineprofile"))
 
+    // Liquid GLass
+    implementation(libs.liquid.glass)
+
     // AndroidX & Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
